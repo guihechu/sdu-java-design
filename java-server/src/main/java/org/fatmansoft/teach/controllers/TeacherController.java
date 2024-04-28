@@ -186,7 +186,7 @@ public class TeacherController {
     @PostMapping("/teacherDelete")
     @PreAuthorize(" hasRole('ADMIN')")
     public DataResponse teacherDelete(@Valid @RequestBody DataRequest dataRequest) {
-        Integer teacherId = dataRequest.getInteger("taecherId");  //获取student_id值
+        Integer teacherId = dataRequest.getInteger("teacherId");  //获取student_id值
         Teacher s = null;
         Optional<Teacher> op;
         if (teacherId != null) {
