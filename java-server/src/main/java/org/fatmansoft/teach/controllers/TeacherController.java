@@ -156,8 +156,8 @@ public class TeacherController {
      * @return
      */
 
-    @PostMapping("/getStudentItemOptionList")
-    public OptionItemList getStudentItemOptionList(@Valid @RequestBody DataRequest dataRequest) {
+    @PostMapping("/getTeacherItemOptionList")
+    public OptionItemList getTeacherItemOptionList(@Valid @RequestBody DataRequest dataRequest) {
         List<Teacher> sList = teacherRepository.findTeacherListByNumName("");  //数据库查询操作
         OptionItem item;
         List<OptionItem> itemList = new ArrayList();
@@ -228,6 +228,72 @@ public class TeacherController {
         }
         return CommonMethod.getReturnData(getMapFromTeacher(s)); //这里回传包含学生信息的Map对象
     }
-
-
+    @PostMapping("/teacherEditSave")
+    @PreAuthorize(" hasRole('ADMIN')")
+    public DataResponse teacherEditSave(@Valid @RequestBody DataRequest dataRequest){
+        Integer teacherId = dataRequest.getInteger("teacherId");
+        Map form = dataRequest.getMap("form");
+        String num = CommonMethod.getString(form,"num");
+        Teacher t=null;
+        Person p;
+        User u;
+        Optional<Teacher> op;
+        Integer personId;
+        if(teacherId!=null){
+            op= teacherRepository.findById(teacherId);
+            if(op.isPresent()){
+                t = op.get();
+            }
+        }
+        Optional<Person> nOp = personRepository.findByNum(num);
+        if(nOp.isPresent()){
+            if(t == null || !t.getPerson().getNum().equals(num)){
+                return CommonMethod.getReturnMessageError("新学号已经存在，不能添加或修改！");
+            }
+        }
+        if(t == null){
+            personId = getNewPersonId();
+            p = new Person();
+            p.setPersonId(personId);
+            p.setNum(num);
+            p.setType("2");
+            personRepository.saveAndFlush(p);
+            String password = encoder.encode("123456");
+            u= new User();
+            u.setUserId(getNewUserId());
+            u.setPerson(p);
+            u.setUserName(num);
+            u.setPassword(password);
+            u.setUserType(userTypeRepository.findByName(EUserType.ROLE_TEACHER));
+            userRepository.saveAndFlush(u);
+            t = new Teacher();
+            t.setTeacherId(getNewTeacherId());
+            t.setPerson(p);
+            teacherRepository.saveAndFlush(t);
+        }else{
+            p = t.getPerson();
+            personId = p.getPersonId();
+        }if(!num.equals(p.getNum())){
+            Optional<User>uOp = userRepository.findByPersonPersonId(personId);
+            if(uOp.isPresent()){
+                u = uOp.get();
+                u.setUserName(num);
+                userRepository.saveAndFlush(u);
+            }
+            p.setNum(num);
+        }
+        p.setName(CommonMethod.getString(form,"name"));
+        p.setDept(CommonMethod.getString(form,"dept"));
+        p.setCard(CommonMethod.getString(form,"card"));
+        p.setGender(CommonMethod.getString(form,"gender"));
+        p.setBirthday(CommonMethod.getString(form,"birthday"));
+        p.setEmail(CommonMethod.getString(form,"email"));
+        p.setPhone(CommonMethod.getString(form,"phone"));
+        p.setAddress(CommonMethod.getString(form,"address"));
+        personRepository.save(p);  // 修改保存人员信息
+        t.setTitle(CommonMethod.getString(form,"title"));
+        t.setDegree(CommonMethod.getString(form,"degree"));
+        teacherRepository.save(t);  //修改保存学生信息
+        return CommonMethod.getReturnData(t.getTeacherId());  // 将studentId返回前端
+    }
 }
