@@ -63,5 +63,11 @@ public class Course {
         this.credit = credit;
     }
 
+    public Course getPreCourse() {
+        return preCourse;
+    }
 
+    public void setPreCourse(Course preCourse) {
+        this.preCourse = preCourse;
+    }
 }
