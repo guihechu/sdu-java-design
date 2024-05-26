@@ -41,7 +41,7 @@ public class CourseController extends ToolController {
     @FXML
     private TextField creditField;
     @FXML
-    private TextField preCourseField;
+    private TextField preCourseNumField;
 
     @FXML
     private TextField numNameTextField;
@@ -63,7 +63,7 @@ public class CourseController extends ToolController {
         DataResponse res;
         DataRequest req = new DataRequest();
         req.put("numName","");
-        res = HttpRequestUtil.request("/api/Course/getCourseList",req);
+        res = HttpRequestUtil.request("/api/course/getCourseList",req);
         if(res != null && res.getCode()==0){
             courseList = (ArrayList<Map>)res.getData();
         }
@@ -82,7 +82,7 @@ public class CourseController extends ToolController {
         numField.setText("");
         nameField.setText("");
         creditField.setText("");
-        preCourseField.setText("");
+        preCourseNumField.setText("");
     }
 
     protected void changeCourseInfo(){
@@ -103,7 +103,7 @@ public class CourseController extends ToolController {
         numField.setText(CommonMethod.getString(form, "num"));
         nameField.setText(CommonMethod.getString(form, "name"));
         creditField.setText(CommonMethod.getString(form, "credit"));
-        preCourseField.setText(CommonMethod.getString(form, "preCourse"));
+        preCourseNumField.setText(CommonMethod.getString(form, "preCourse"));
     }
     public void onTableRowSelect(ListChangeListener.Change<? extends Integer> change){
         changeCourseInfo();
@@ -156,15 +156,14 @@ public class CourseController extends ToolController {
             MessageDialog.showDialog("课序号为空，不能修改");
             return;
         }
-        Map form = new HashMap();
-        form.put("num",numField.getText());
-        form.put("name",nameField.getText());
-        form.put("credit",creditField.getText());
-        form.put("preCourse",preCourseField.getText());
         DataRequest req = new DataRequest();
         req.put("courseId",courseId);
-        req.put("form",form);
-        DataResponse res = HttpRequestUtil.request("/api/student/studentEditSave",req);
+        req.put("num",numField.getText());
+        req.put("name",nameField.getText());
+        req.put("credit",creditField.getText());
+        req.put("preCourseNum",preCourseNumField.getText());
+
+        DataResponse res = HttpRequestUtil.request("/api/course/courseEditSave",req);
         if(res.getCode()== 0){
             courseId = CommonMethod.getIntegerFromObject(res.getData());
             MessageDialog.showDialog("提交成功");

@@ -70,4 +70,6 @@ public class Course {
     public void setPreCourse(Course preCourse) {
         this.preCourse = preCourse;
     }
+
+
 }

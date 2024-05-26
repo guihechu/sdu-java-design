@@ -71,6 +71,7 @@ public class AuthController {
      * @param loginRequest   username 登录名  password 密码
      * @return   JwtResponse 用户信息， 该信息再后续的web请求时作为请求头的一部分，用于框架的请求服务权限验证
      */
+    //JWT  JSON Web Token
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 

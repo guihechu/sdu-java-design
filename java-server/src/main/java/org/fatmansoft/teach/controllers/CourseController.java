@@ -1,11 +1,13 @@
 package org.fatmansoft.teach.controllers;
 
 import org.fatmansoft.teach.models.Course;
+import org.fatmansoft.teach.models.Score;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.payload.response.OptionItem;
 import org.fatmansoft.teach.payload.response.OptionItemList;
 import org.fatmansoft.teach.repository.CourseRepository;
+import org.fatmansoft.teach.repository.PersonRepository;
 import org.fatmansoft.teach.util.CommonMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +21,8 @@ import java.util.*;
 public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
+    @Autowired
+    private PersonRepository personRepository;
     public synchronized Integer getNewCourseId(){
         Integer id = courseRepository.getMaxId();
         if(id==null)
@@ -35,6 +39,10 @@ public class CourseController {
         m.put("num",c.getNum());
         m.put("name",c.getName());
         m.put("credit",c.getCredit());
+        Object preCourse=c.getPreCourse();
+        if(preCourse != null){
+            m.put("preCourse",c.getPreCourse().getName());
+        }
         return m;
     }
 
@@ -61,7 +69,6 @@ public class CourseController {
     }
 
     @PostMapping("/getCourseList")
-    @PreAuthorize("hasRole('ADMIN')")
     public DataResponse getCourseList(@Valid @RequestBody DataRequest dataRequest){
         String numName = dataRequest.getString("numName");
         List dataList = getCourseMapList(numName);
@@ -105,8 +112,9 @@ public class CourseController {
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse courseEditSave(@Valid @RequestBody DataRequest dataRequest){
         Integer courseId = dataRequest.getInteger("courseId");
-        Map form = dataRequest.getMap("form");
-        String num = CommonMethod.getString(form,"num");
+        Integer credit = Integer.valueOf(dataRequest.getString("credit"));
+        String name = dataRequest.getString("name");
+        String num = dataRequest.getString("num");
         Course c = null;
         Optional<Course> op;
         if(courseId != null){
@@ -137,10 +145,10 @@ public class CourseController {
                 courseRepository.saveAndFlush(c);
             }
         }
-        c.setName(CommonMethod.getString(form,"name"));
-        c.setCredit(CommonMethod.getInteger(form,"credit"));
+        c.setName(name);
+        c.setCredit(credit);
         Course preCourse = null;
-        Optional<Course> aOp= courseRepository.findByCourseId(CommonMethod.getInteger(form,"preCourse"));
+        Optional<Course> aOp= courseRepository.findByNum(dataRequest.getString("preCourseNum"));
         if(aOp.isPresent()){
             preCourse = aOp.get();
         }

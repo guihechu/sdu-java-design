@@ -14,6 +14,13 @@ import java.util.List;
 
 @Repository
 public interface ScoreRepository extends JpaRepository<Score,Integer> {
+    @Query(value = "select max(scoreId) from Score  ")
+    Integer getMaxId();
     List<Score> findByStudentStudentId(Integer studentId);
+    @Query(value="from Score where (?1=0 or student.studentId=?1) and (?2=0 or course.courseId=?2)" )
+    List<Score> findByStudentCourse(Integer studentId, Integer courseId);
+
+    @Query(value="from Score where student.studentId=?1 and (?2=0 or course.name like %?2%)" )
+    List<Score> findByStudentCourse(Integer studentId, String courseName);
 
 }

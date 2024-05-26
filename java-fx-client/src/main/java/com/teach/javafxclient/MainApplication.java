@@ -19,6 +19,7 @@ public class MainApplication extends Application {
      * @throws IOException
      */
     public static Stage mainStage;
+    private static boolean canClose = true;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -48,5 +49,9 @@ public class MainApplication extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+    public static Stage getMainStage(){return mainStage;}
+    public static void setCanClose(boolean canClose){
+        MainApplication.canClose=canClose;
     }
 }

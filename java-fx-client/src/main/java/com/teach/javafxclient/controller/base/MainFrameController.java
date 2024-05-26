@@ -154,13 +154,57 @@ public class MainFrameController {
             throw new RuntimeException(e);
         }
     }
+    public  void changeContent(ActionEvent ae) {
+        Object obj = ae.getSource();
+        String name= null, title= null;
+        if(obj instanceof MenuItem) {
+            MenuItem item = (MenuItem)obj;
+            name = item.getId();
+            title = item.getText();
+        }
+        if(name == null)
+            return;
+        changeContent(name,title);
+    }
 
     /**
      * 点击菜单栏中的菜单 执行changeContent 在主框架工作区增加和显示一个工作面板
      * @param name  菜单名 name.fxml 对应面板的配置文件
      * @param title 菜单标题 工作区中的TablePane的标题
      */
-    protected  void changeContent(String name, String title) {
+/*    protected  void changeContent(String name, String title) {
+        Tab tab = tabMap.get(name);
+        Scene scene;
+        Object c;
+        if(tab == null) {
+            scene = sceneMap.get(name);
+            if(scene == null) {
+                FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(name + ".fxml"));
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1024, 768);
+                    sceneMap.put(name, scene);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                c = fxmlLoader.getController();
+                if(c instanceof ToolController) {
+                    controlMap.put(name,(ToolController)c);
+                }
+            }
+            tab = new Tab(title);
+            tab.setId(name);
+            tab.setOnSelectionChanged(this::tabSelectedChanged);
+            tab.setOnClosed(this::tabOnClosed);
+            tab.setContent(scene.getRoot());
+            contentTabPane.getTabs().add(tab);
+            tabMap.put(name, tab);
+        }
+        contentTabPane.getSelectionModel().select(tab);
+    }*/
+    public  void changeContent(String name, String title) {
+        if(name == null || name.length() == 0)
+            return;
         Tab tab = tabMap.get(name);
         Scene scene;
         Object c;

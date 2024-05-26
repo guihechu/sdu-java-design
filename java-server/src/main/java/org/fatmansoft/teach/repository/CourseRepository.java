@@ -1,6 +1,7 @@
 package org.fatmansoft.teach.repository;
 
 import org.fatmansoft.teach.models.Course;
+import org.fatmansoft.teach.models.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,9 +20,12 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
     Integer getMaxId();
     Optional<Course> findByCourseId(Integer courseId);
     Optional<Course> findByNum(String num);
+    List<Course> findByName(String name);
 
 //    @Query("SELECT c FROM Course c WHERE (:numName IS NULL OR c.num LIKE CONCAT('%', :numName, '%') OR c.name LIKE CONCAT('%', :numName, '%'))")
 //    List<Course> findCourseListByNumName(String numName);
-    @Query("from Course where :numName = '' or numName like concat('%', :numName, '%')")
-    List<Course> findCourseListByNumName(@Param("numName") String numName);
+//    @Query("from Course where :numName = '' or numName like concat('%', :numName, '%')")
+//    List<Course> findCourseListByNumName(@Param("numName") String numName);
+    @Query(value = "from Course where ?1='' or num like %?1% or name like %?1% ")
+    List<Course> findCourseListByNumName(String numName);
 }
