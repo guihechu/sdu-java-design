@@ -17,8 +17,8 @@ package com.teach.javafxclient.model;
 */
 public class Person {
     private Integer personId;
-    private String num;
-    private String name;
+    protected String num;
+    protected String name;
     private String dept;
     private String card;
     private String gender;

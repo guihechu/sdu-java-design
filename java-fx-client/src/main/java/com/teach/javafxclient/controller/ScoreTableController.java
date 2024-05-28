@@ -61,20 +61,20 @@ public class ScoreTableController {
 
     @FXML
     private void onQueryButtonClick(){
-        Integer studentId = null;
-        Integer courseId = null;
+        String studentNum = null;
+        String courseNum = null;
         OptionItem op;
         op = studentComboBox.getSelectionModel().getSelectedItem();
         if(op != null)
-            studentId = Integer.parseInt(op.getValue());
+            studentNum = op.getValue();
         op = courseComboBox.getSelectionModel().getSelectedItem();
         if(op != null)
-            courseId = Integer.parseInt(op.getValue());
+            courseNum = op.getValue();
         DataResponse res;
         DataRequest req =new DataRequest();
-        req.add("studentId",studentId);
-        req.add("courseId",courseId);
-        res = HttpRequestUtil.request("/api/score/getScoreList",req);
+        req.add("studentNum",studentNum);
+        req.add("courseNum",courseNum);
+        res = HttpRequestUtil.request("/api/score/getScoreListByNum",req);
         if(res != null && res.getCode()==0){
             scoreList = (ArrayList<Map>) res.getData();
         }
@@ -196,7 +196,7 @@ public class ScoreTableController {
     }
     @FXML
     private void onEditButtonClick() {
-        dataTableView.getSelectionModel().getSelectedItems();
+//        dataTableView.getSelectionModel().getSelectedItems();
         Map data = dataTableView.getSelectionModel().getSelectedItem();
         if(data == null) {
             MessageDialog.showDialog("没有选中，不能修改！");

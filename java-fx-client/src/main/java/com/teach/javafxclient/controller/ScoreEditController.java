@@ -67,8 +67,8 @@ public class ScoreEditController {
             markField.setText("");
         }else{
             scoreId = CommonMethod.getInteger(data,"scoreId");
-            studentComboBox.getSelectionModel().select(CommonMethod.getOptionItemIndexByValue(studentList, CommonMethod.getString(data, "studentId")));
-            courseComboBox.getSelectionModel().select(CommonMethod.getOptionItemIndexByValue(courseList,CommonMethod.getString(data,"courseId")));
+            studentComboBox.getSelectionModel().select(CommonMethod.getOptionItemIndexByValue(studentList, CommonMethod.getString(data, "studentNum")));
+            courseComboBox.getSelectionModel().select(CommonMethod.getOptionItemIndexByValue(courseList,CommonMethod.getString(data,"courseNum")));
             studentComboBox.setDisable(true);
             courseComboBox.setDisable(true);
             markField.setText(CommonMethod.getString(data,"mark"));

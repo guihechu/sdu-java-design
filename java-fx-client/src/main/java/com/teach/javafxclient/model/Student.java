@@ -43,4 +43,7 @@ public class Student extends Person{
     public void setClassName(String className) {
         this.className = className;
     }
+    public String toString(){
+        return super.num+"-" + super.name;
+    }
 }

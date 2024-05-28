@@ -19,6 +19,10 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
     @Query(value = "select max(studentId) from Student  ")
     Integer getMaxId();
     Optional<Student> findByPersonPersonId(Integer personId);
+
+    @Override
+    Optional<Student> findById(Integer integer);
+
     Optional<Student> findByPersonNum(String num);
     List<Student> findByPersonName(String name);
 
