@@ -2,12 +2,14 @@ package org.fatmansoft.teach.controllers;
 
 import org.fatmansoft.teach.models.Course;
 import org.fatmansoft.teach.models.Score;
+import org.fatmansoft.teach.models.Teacher;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.payload.response.OptionItem;
 import org.fatmansoft.teach.payload.response.OptionItemList;
 import org.fatmansoft.teach.repository.CourseRepository;
 import org.fatmansoft.teach.repository.PersonRepository;
+import org.fatmansoft.teach.repository.TeacherRepository;
 import org.fatmansoft.teach.util.CommonMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,8 @@ public class CourseController {
     private CourseRepository courseRepository;
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private TeacherRepository teacherRepository;
     public synchronized Integer getNewCourseId(){
         Integer id = courseRepository.getMaxId();
         if(id==null)
@@ -43,6 +47,33 @@ public class CourseController {
         if(preCourse != null){
             m.put("preCourse",c.getPreCourse().getName());
         }
+        Object teacher = c.getTeacher();
+        if(teacher != null){
+            m.put("teacher",c.getTeacher().getPerson().getName());
+        }
+        m.put("address",c.getAddress());
+        m.put("refMat",c.getRefMat());
+        return m;
+    }
+
+    public Map getMapInfoFromCourse(Course c){
+        Map m = new HashMap();
+        if(c==null)
+            return m;
+        m.put("courseId",c.getCourseId());
+        m.put("num",c.getNum());
+        m.put("name",c.getName());
+        m.put("credit",c.getCredit());
+        Object preCourse=c.getPreCourse();
+        if(preCourse != null){
+            m.put("preCourse",c.getPreCourse().getNum());
+        }
+        Object teacher = c.getTeacher();
+        if(teacher != null){
+            m.put("teacher",c.getTeacher().getPerson().getName());
+        }
+        m.put("address",c.getAddress());
+        m.put("refMat",c.getRefMat());
         return m;
     }
 
@@ -105,22 +136,35 @@ public class CourseController {
                 c = op.get();
             }
         }
-        return CommonMethod.getReturnData(getMapFromCourse(c));
+        return CommonMethod.getReturnData(getMapInfoFromCourse(c));
     }
 
     @PostMapping("/courseEditSave")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse courseEditSave(@Valid @RequestBody DataRequest dataRequest){
         Integer courseId = dataRequest.getInteger("courseId");
-        Integer credit = Integer.valueOf(dataRequest.getString("credit"));
+        Integer teacherId = dataRequest.getInteger("teacherId");
+        double doubleValue = Double.parseDouble(dataRequest.getString("credit"));
+        int intValue = (int)Math.round(doubleValue);
+        Integer credit = Integer.valueOf(intValue);
         String name = dataRequest.getString("name");
         String num = dataRequest.getString("num");
+        String address = dataRequest.getString("address");
+        String refMat = dataRequest.getString("refMat");
         Course c = null;
+        Teacher t = null;
         Optional<Course> op;
         if(courseId != null){
             op = courseRepository.findById(courseId);
             if(op.isPresent()){
                 c = op.get();
+            }
+        }
+        Optional<Teacher> tOp;
+        if(teacherId != null){
+            tOp = teacherRepository.findByTeacherId(teacherId);
+            if(tOp.isPresent()){
+                t = tOp.get();
             }
         }
         Optional<Course> cOp = courseRepository.findByNum(num);
@@ -147,6 +191,9 @@ public class CourseController {
         }
         c.setName(name);
         c.setCredit(credit);
+        c.setAddress(address);
+        c.setRefMat(refMat);
+        c.setTeacher(t);
         Course preCourse = null;
         Optional<Course> aOp= courseRepository.findByNum(dataRequest.getString("preCourseNum"));
         if(aOp.isPresent()){

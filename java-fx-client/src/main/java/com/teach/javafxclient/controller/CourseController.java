@@ -33,6 +33,13 @@ public class CourseController extends ToolController {
     private TableColumn<Map,Integer> creditColumn;
     @FXML
     private TableColumn<Map,String> preCourseColumn;
+    @FXML
+    private TableColumn<Map,String> teacherColumn;
+    @FXML
+    private TableColumn<Map,String> addressColumn;
+    @FXML
+    private TableColumn<Map,String> refMatColumn;
+
 
     @FXML
     private TextField numField;
@@ -42,9 +49,17 @@ public class CourseController extends ToolController {
     private TextField creditField;
     @FXML
     private TextField preCourseNumField;
+    @FXML
+    private ComboBox<OptionItem> teacherComboBox;
+    private List<OptionItem> teacherList;
+    @FXML
+    private TextField addressField;
+    @FXML
+    private TextField refMatField;
 
     @FXML
     private TextField numNameTextField;
+    public List<OptionItem> getTeacherList(){return teacherList;}
 
     private Integer courseId = null;
     private ArrayList<Map> courseList = new ArrayList();
@@ -71,6 +86,14 @@ public class CourseController extends ToolController {
         nameColumn.setCellValueFactory(new MapValueFactory("name"));
         creditColumn.setCellValueFactory(new MapValueFactory("credit"));
         preCourseColumn.setCellValueFactory(new MapValueFactory("preCourse"));
+        teacherColumn.setCellValueFactory(new MapValueFactory("teacher"));
+        addressColumn.setCellValueFactory(new MapValueFactory("address"));
+        refMatColumn.setCellValueFactory(new MapValueFactory("refMat"));
+        DataRequest re = new DataRequest();
+        teacherList = HttpRequestUtil.requestOptionItemList("/api/teacher/getTeacherItemOptionList",re);
+        OptionItem item = new OptionItem(null,"0","请选择");
+        teacherComboBox.getItems().addAll(item);
+        teacherComboBox.getItems().addAll(teacherList);
         TableView.TableViewSelectionModel<Map> tsm = dataTableView.getSelectionModel();
         ObservableList<Integer> list = tsm.getSelectedIndices();
         list.addListener(this::onTableRowSelect);
@@ -83,6 +106,9 @@ public class CourseController extends ToolController {
         nameField.setText("");
         creditField.setText("");
         preCourseNumField.setText("");
+        teacherComboBox.getEditor().setText("");
+        addressField.setText("");
+        refMatField.setText("");
     }
 
     protected void changeCourseInfo(){
@@ -104,6 +130,9 @@ public class CourseController extends ToolController {
         nameField.setText(CommonMethod.getString(form, "name"));
         creditField.setText(CommonMethod.getString(form, "credit"));
         preCourseNumField.setText(CommonMethod.getString(form, "preCourse"));
+        teacherComboBox.getEditor().setText(CommonMethod.getString(form,"teacher"));
+        addressField.setText(CommonMethod.getString(form,"address"));
+        refMatField.setText(CommonMethod.getString(form,"refMat"));
     }
     public void onTableRowSelect(ListChangeListener.Change<? extends Integer> change){
         changeCourseInfo();
@@ -162,6 +191,13 @@ public class CourseController extends ToolController {
         req.put("name",nameField.getText());
         req.put("credit",creditField.getText());
         req.put("preCourseNum",preCourseNumField.getText());
+        OptionItem op;
+        op = teacherComboBox.getSelectionModel().getSelectedItem();
+        if(op != null){
+            req.put("teacherId",op.getId());
+        }
+        req.put("address",addressField.getText());
+        req.put("refMat",refMatField.getText());
 
         DataResponse res = HttpRequestUtil.request("/api/course/courseEditSave",req);
         if(res.getCode()== 0){
@@ -171,6 +207,7 @@ public class CourseController extends ToolController {
         else{
             MessageDialog.showDialog(res.getMsg());
         }
+        onQueryButtonClick();
     }
 
     public void doNew(){clearPanel();}

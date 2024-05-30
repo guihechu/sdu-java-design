@@ -263,6 +263,7 @@ public class StudentController extends ToolController {
         else {
             MessageDialog.showDialog(res.getMsg());
         }
+        onQueryButtonClick();
     }
 
     /**

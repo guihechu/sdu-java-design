@@ -27,6 +27,13 @@ public class Course {
     private String name;
     private Integer credit;
 
+    private String address;
+
+    private String refMat;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
     @ManyToOne
     @JoinColumn(name="pre_course_id")
     private Course preCourse;
@@ -71,5 +78,27 @@ public class Course {
         this.preCourse = preCourse;
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getRefMat() {
+        return refMat;
+    }
+
+    public void setRefMat(String refMat) {
+        this.refMat = refMat;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }

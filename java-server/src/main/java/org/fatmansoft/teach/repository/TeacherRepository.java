@@ -20,6 +20,7 @@ public interface TeacherRepository extends JpaRepository<Teacher,Integer> {
     @Query(value = "select max(teacherId) from Teacher  ")
     Integer getMaxId();
     Optional<Teacher> findByPersonPersonId(Integer personId);
+    Optional<Teacher> findByTeacherId(Integer teacherId);
     Optional<Teacher> findByPersonNum(String num);
     List<Teacher> findByPersonName(String name);
 
