@@ -63,7 +63,7 @@
                         <TableColumn fx:id="moneyColumn" prefWidth="183.33331298828125" text="额度" />
                     </columns>
                 </TableView>
-                <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="300.0" spacing="20.0">
+                <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="300.0" spacing="20.0" stylesheets="@css/Pickers.css">
                     <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
@@ -83,7 +83,7 @@
                             <Label text="时间" GridPane.rowIndex="1" />
                             <Label text="额度" GridPane.rowIndex="2" />
                             <TextField fx:id="moneyField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                     <DatePicker fx:id="dayPick" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     <DatePicker fx:id="dayPick" stylesheets="@css/Pickers.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         </children>
                     </GridPane>
                     <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="36.0">
