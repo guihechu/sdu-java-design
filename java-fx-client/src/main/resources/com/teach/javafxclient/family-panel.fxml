@@ -67,7 +67,7 @@
                     <columns>
                         <TableColumn fx:id="numColumn" prefWidth="101.99999996026357" text="学生学号" />
                         <TableColumn fx:id="nameColumn" prefWidth="96.0" text="成员姓名" />
-                  <TableColumn fx:id="idCardColumn" prefWidth="75.0" text="身份证号" />
+                  <TableColumn fx:id="idCardColumn" prefWidth="75.0" text="证件号码" />
                         <TableColumn fx:id="relationColumn" prefWidth="88.66668701171875" text="家庭关系" />
                         <TableColumn fx:id="birthdayColumn" prefWidth="88.00006103515625" text="出生日期" />
                         <TableColumn fx:id="emailColumn" prefWidth="53.99993896484375" text="邮箱" />

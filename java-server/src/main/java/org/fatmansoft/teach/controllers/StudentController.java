@@ -106,6 +106,21 @@ public class StudentController {
         return id;
     };
 
+    protected String getGPA(Integer studentId){
+        double GPA = 0;
+        double allCredit = 0;
+        List<Score> scoreList = scoreRepository.findByStudentStudentId(studentId);
+        if(scoreList == null || scoreList.size() == 0){
+            return "0";
+        }
+        for(Score s :scoreList){
+            allCredit+=s.getCourse().getCredit();
+            GPA = GPA + s.getMark()*s.getCourse().getCredit();
+        }
+        GPA/=allCredit;
+        return String.format("%.2f", GPA).toString();
+    }
+
 
     /**
      * getMapFromStudent 将学生表属性数据转换复制MAp集合里
@@ -136,6 +151,7 @@ public class StudentController {
         m.put("phone",p.getPhone());
         m.put("address",p.getAddress());
         m.put("introduce",p.getIntroduce());
+        m.put("GPA",getGPA(s.getStudentId()));
         return m;
     }
 

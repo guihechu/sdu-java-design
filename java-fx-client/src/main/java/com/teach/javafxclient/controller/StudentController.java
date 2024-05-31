@@ -49,6 +49,8 @@ public class StudentController extends ToolController {
     private TableColumn<Map,Integer> phoneColumn; //学生信息表 电话列
     @FXML
     private TableColumn<Map,Integer> addressColumn;//学生信息表 地址列
+    @FXML
+    private TableColumn<Map,Double> GPAColumn;
 
     @FXML
     private TextField numField; //学生信息  学号输入域
@@ -118,6 +120,7 @@ public class StudentController extends ToolController {
         emailColumn.setCellValueFactory(new MapValueFactory<>("email"));
         phoneColumn.setCellValueFactory(new MapValueFactory<>("phone"));
         addressColumn.setCellValueFactory(new MapValueFactory<>("address"));
+        GPAColumn.setCellValueFactory(new MapValueFactory<>("GPA"));
         TableView.TableViewSelectionModel<Map> tsm = dataTableView.getSelectionModel();
         ObservableList<Integer> list = tsm.getSelectedIndices();
         list.addListener(this::onTableRowSelect);

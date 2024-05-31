@@ -24,8 +24,6 @@ public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
-    private PersonRepository personRepository;
-    @Autowired
     private TeacherRepository teacherRepository;
     public synchronized Integer getNewCourseId(){
         Integer id = courseRepository.getMaxId();
