@@ -1,6 +1,7 @@
 package org.fatmansoft.teach.controllers;
 
 import org.fatmansoft.teach.models.ApproveLeave;
+import org.fatmansoft.teach.models.Leave;
 import org.fatmansoft.teach.models.Student;
 import org.fatmansoft.teach.models.StudentLeave;
 import org.fatmansoft.teach.payload.request.DataRequest;
@@ -8,6 +9,7 @@ import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.payload.response.OptionItem;
 import org.fatmansoft.teach.payload.response.OptionItemList;
 import org.fatmansoft.teach.repository.ApproveLeaveRepository;
+import org.fatmansoft.teach.repository.LeaveRepository;
 import org.fatmansoft.teach.repository.StudentLeaveRepository;
 import org.fatmansoft.teach.repository.StudentRepository;
 import org.fatmansoft.teach.util.ComDataUtil;
@@ -29,6 +31,8 @@ public class ApproveLeaveController {
     private StudentLeaveRepository studentLeaveRepository;  //家庭数据操作自动注入
     @Autowired
     private ApproveLeaveRepository approveLeaveRepository;  //家庭数据操作自动注入
+    @Autowired
+    private LeaveRepository leaveRepository;
     @Autowired
     private StudentRepository studentRepository;  //学生数据操作自动注入
     public synchronized Integer getNewApproveLeaveId(){
@@ -133,12 +137,15 @@ public class ApproveLeaveController {
     public DataResponse ApproveLeaveEditSave(@Valid @RequestBody DataRequest dataRequest) {
         Integer approveLeaveId = dataRequest.getInteger("approveLeaveId");
         Map form = dataRequest.getMap("form"); //参数获取Map对象
-        String num = CommonMethod.getString(form, "num");  //Map 获取属性的值
+        String num = CommonMethod.getString(form,"num");
+        String leaveReason = CommonMethod.getString(form,"leaveReason");
+        String startDate = CommonMethod.getString(form,"startDate");
+        String endDate =CommonMethod.getString(form,"endDate");
         ApproveLeave f = null;
         StudentLeave sl;
         Optional<ApproveLeave> op;
-        Optional<Student> nOp = studentRepository.findByPersonNum(num); //查询是否存在num的人员
-        sl = studentLeaveRepository.findStudentLeaveByLeaveReason(CommonMethod.getString(form,"leaveReason")).get();
+        Leave l = leaveRepository.findByAll(num,leaveReason,startDate,endDate).get();
+        sl = studentLeaveRepository.findById(l.getLeaveId()).get();
         if (approveLeaveId != null) {
             op = approveLeaveRepository.findById(approveLeaveId);  //查询对应数据库中主键为id的值的实体对象
             if (op.isPresent()) {

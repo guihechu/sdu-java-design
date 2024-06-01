@@ -16,5 +16,7 @@ public interface LeaveRepository extends JpaRepository<Leave,Integer> {
     Optional<Leave> findByLeaveReason(String leaveReason);
     @Query(value = "from Leave l where ?1='' or l.student.person.num like %?1% ")
     List<Leave> findByStudentStudentNum(String num);
+    @Query(value = "from Leave where student.person.num=?1 and leaveReason=?2 and startDate=?3 and endDate=?4")
+    Optional<Leave> findByAll (String num,String leaveReason,String startDate,String endDate);
 
 }
