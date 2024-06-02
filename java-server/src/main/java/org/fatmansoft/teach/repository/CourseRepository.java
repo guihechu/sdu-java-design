@@ -22,10 +22,7 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
     Optional<Course> findByNum(String num);
     List<Course> findByName(String name);
 
-//    @Query("SELECT c FROM Course c WHERE (:numName IS NULL OR c.num LIKE CONCAT('%', :numName, '%') OR c.name LIKE CONCAT('%', :numName, '%'))")
-//    List<Course> findCourseListByNumName(String numName);
-//    @Query("from Course where :numName = '' or numName like concat('%', :numName, '%')")
-//    List<Course> findCourseListByNumName(@Param("numName") String numName);
+
     @Query(value = "from Course where ?1='' or num like %?1% or name like %?1% ")
     List<Course> findCourseListByNumName(String numName);
 }
