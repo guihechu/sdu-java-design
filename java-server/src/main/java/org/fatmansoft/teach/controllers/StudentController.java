@@ -8,6 +8,7 @@ import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.payload.response.OptionItem;
 import org.fatmansoft.teach.payload.response.OptionItemList;
+import org.fatmansoft.teach.models.Fee;
 import org.fatmansoft.teach.repository.*;
 import org.fatmansoft.teach.service.BaseService;
 import org.fatmansoft.teach.util.ComDataUtil;
@@ -50,7 +51,7 @@ public class StudentController {
     @Autowired
     private ScoreRepository scoreRepository;  //成绩数据操作自动注入
     @Autowired
-    private FeeRepository feeRepository;  //消费数据操作自动注入
+    private FeeRepository feeRepository;
     @Autowired
     private BaseService baseService;   //基本数据处理数据操作自动注入
 
@@ -394,7 +395,7 @@ public class StudentController {
      * @return
      */
     public List getStudentFeeList(Integer studentId){
-        List<Fee> sList =feeRepository.findListByStudent(studentId);  // 查询某个学生消费记录集合
+        List<Fee> sList =feeRepository.findListByStudent(studentId);// 查询某个学生消费记录集合
         List list = new ArrayList();
         if(sList == null || sList.size() == 0)
             return list;

@@ -174,6 +174,7 @@ public class ActivityController extends ToolController {
         } else {
             MessageDialog.showDialog(res.getMsg());
         }
+        onQueryButtonClick();
     }
 
 
